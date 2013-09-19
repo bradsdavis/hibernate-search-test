@@ -1,7 +1,7 @@
 package com.bradsdavis.jpa.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,15 +44,15 @@ public class Item {
 	@IndexedEmbedded(prefix="category_", includePaths={"name"})
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "item_category", joinColumns = { 
-			@JoinColumn(name = "ITEM_ID", nullable = false, updatable = false) }, 
-			inverseJoinColumns = { @JoinColumn(name = "CATEGORY_ID", nullable = false, updatable = false) })
-	private List<Category> categories = new LinkedList<Category>();
+			@JoinColumn(name = "ITEM_ID") }, 
+			inverseJoinColumns = { @JoinColumn(name = "CATEGORY_ID") })
+	private Collection<Category> categories = new HashSet<Category>();
 	
-	public List<Category> getCategories() {
+	public Collection<Category> getCategories() {
 		return categories;
 	}
 	
-	public void setCategories(List<Category> categories) {
+	public void setCategories(Collection<Category> categories) {
 		this.categories = categories;
 	}
 

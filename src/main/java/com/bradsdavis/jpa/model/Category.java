@@ -1,9 +1,13 @@
 package com.bradsdavis.jpa.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,6 +30,18 @@ public class Category {
 	@Size(min = 3, max = 30)
 	@Field(analyze=Analyze.NO, index=Index.YES, store=Store.NO)
 	private String name;
+
+	@ManyToMany(mappedBy="categories")
+	private Collection<Item> items = new HashSet<Item>();
+	
+	public Collection<Item> getItems() {
+		return items;
+	}
+	
+	public void setItems(Collection<Item> items) {
+		this.items = items;
+	}
+	
 
 	public Long getId() {
 		return id;

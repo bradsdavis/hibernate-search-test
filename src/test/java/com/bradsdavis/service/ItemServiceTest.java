@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.ejb.EJB;
 
+import org.hibernate.search.query.facet.Facet;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -27,7 +28,7 @@ import com.bradsdavis.jpa.model.Item;
 @RunWith(Arquillian.class)
 public class ItemServiceTest {
 
-	private final int UPPER_LIMIT = 10;
+	private final int UPPER_LIMIT = 20;
 	
 	@EJB
 	ItemDao itemDao;
@@ -73,9 +74,9 @@ public class ItemServiceTest {
     	catalogDao.create(createCatalog);
 
     	Category category1 = new Category();
-    	category1.setName("Item Example ABC");
+    	category1.setName("123 Example ABC");
     	categoryDao.create(category1);
-
+    	
     	Category category2 = new Category();
     	category2.setName("Item Example XYZ");
     	categoryDao.create(category2);
@@ -127,8 +128,12 @@ public class ItemServiceTest {
     
     @Test
     @InSequence(4)
-	public void testItemFacets() throws Exception {
-		Collection<String> facets = itemSearch.getFacets();
+	public void testMultipleItemFacets() throws Exception {
+		Collection<Facet> facets = itemSearch.getFacets();
+		
 		Assert.assertTrue(facets.size() == 2);
+		for(Facet facet : facets) {
+			Assert.assertTrue("Count should be: "+UPPER_LIMIT+" but is: "+facet.getCount(), facet.getCount() == UPPER_LIMIT);
+		}
 	}
 }

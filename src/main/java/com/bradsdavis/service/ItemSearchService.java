@@ -17,7 +17,6 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.engine.spi.FacetManager;
 import org.hibernate.search.query.facet.Facet;
-import org.hibernate.search.query.facet.FacetSortOrder;
 import org.hibernate.search.query.facet.FacetingRequest;
 
 import com.bradsdavis.jpa.model.Item;
@@ -64,7 +63,7 @@ public class ItemSearchService {
 		return results;
 	}
 	
-	public Collection<String> getFacets() {
+	public Collection<Facet> getFacets() {
 		FullTextEntityManager fullTextEntityManager = org.hibernate.search.jpa.Search.getFullTextEntityManager(entityManager);
 		
 		QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Item.class).get();
@@ -79,17 +78,6 @@ public class ItemSearchService {
         FullTextQuery hibQuery = fullTextEntityManager.createFullTextQuery(query, Item.class);
 
         FacetManager fm = hibQuery.getFacetManager().enableFaceting(labelFacetingRequest);
-        List<Facet> facets = fm.getFacets("categoryLabel");
-
-        System.out.println("==========Faceting Request result======catagory======"+ facets.size());
-        
-        Set<String> results = new HashSet<String>();
-        for (Facet facet : facets) {
-                System.out.println(facet.getFieldName() + "===" + facet.getValue()+ "===" + facet.getCount());
-                results.add(facet.toString());
-        }
-        System.out.println("==========Faceting Request result======catagory======"+ facets.size());
-
-        return results;
+        return fm.getFacets("categoryLabel");
 	}
 }
